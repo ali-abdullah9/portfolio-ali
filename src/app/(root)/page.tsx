@@ -4,10 +4,12 @@
 import { useEffect, useState } from 'react';
 import Hero from '@/components/sections/Hero';
 import About from '@/components/sections/About';
+import Projects from '@/components/sections/Projects';
 import { motion, AnimatePresence } from 'framer-motion';
 import LoadingScreen from '@/components/Shared/LoadingScreen';
 import Cursor from '@/components/Shared/Cursor';
 import Navigation from '@/components/Shared/Navigation';
+import Skills from '@/components/sections/Skills';
 
 // Smooth scroll behavior
 const smoothScroll = () => {
@@ -40,52 +42,8 @@ export default function Home() {
       <main className="relative bg-black">
         <Hero />
         <About />
-        
-        {/* Projects Section with slide animation */}
-        <motion.section 
-          id="projects" 
-          className="min-h-screen bg-black relative overflow-hidden"
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true, amount: 0.3 }}
-          transition={{ duration: 0.8 }}
-        >
-          <div className="absolute inset-0 bg-gradient-to-b from-black via-cyan-900/10 to-black" />
-          <motion.div 
-            className="relative z-10 flex items-center justify-center min-h-screen p-20"
-            initial={{ x: 100, opacity: 0 }}
-            whileInView={{ x: 0, opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-          >
-            <h2 className="text-6xl font-bold bg-gradient-to-r from-purple-400 to-cyan-400 bg-clip-text text-transparent">
-              Projects Section
-            </h2>
-          </motion.div>
-        </motion.section>
-        
-        {/* Skills Section with slide animation */}
-        <motion.section 
-          id="skills" 
-          className="min-h-screen bg-black relative overflow-hidden"
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true, amount: 0.3 }}
-          transition={{ duration: 0.8 }}
-        >
-          <div className="absolute inset-0 bg-gradient-to-b from-black via-pink-900/10 to-black" />
-          <motion.div 
-            className="relative z-10 flex items-center justify-center min-h-screen p-20"
-            initial={{ y: 100, opacity: 0 }}
-            whileInView={{ y: 0, opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-          >
-            <h2 className="text-6xl font-bold bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
-              Skills Section
-            </h2>
-          </motion.div>
-        </motion.section>
+        <Projects />
+        <Skills />
         
         {/* Contact Section with slide animation */}
         <motion.section 
@@ -110,6 +68,6 @@ export default function Home() {
           </motion.div>
         </motion.section>
       </main>
-    </>
+      </>
   );
 }
