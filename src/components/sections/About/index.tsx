@@ -1,23 +1,29 @@
 // src/components/sections/About/index.tsx
-'use client';
+"use client";
 
-import { useRef, useState, useEffect, Suspense } from 'react';
-import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
-import { 
-  Code2, 
-  Rocket, 
+import { useRef, useState, useEffect, Suspense } from "react";
+import {
+  motion,
+  useScroll,
+  useTransform,
+  AnimatePresence,
+} from "framer-motion";
+import {
+  Code2,
+  Rocket,
   GraduationCap,
   Brain,
   Target,
-  Sparkles
-} from 'lucide-react';
-import { skills } from '@/data/skills';
-import dynamic from 'next/dynamic';
+  Sparkles,
+} from "lucide-react";
+import { skills } from "@/data/skills";
+import dynamic from "next/dynamic";
+import Image from "next/image";
 
 // Dynamically import the canvas component
-const AboutCanvas = dynamic(() => import('./AboutCanvas'), {
+const AboutCanvas = dynamic(() => import("./AboutCanvas"), {
   ssr: false,
-  loading: () => <div className="absolute inset-0 bg-black" />
+  loading: () => <div className="absolute inset-0 bg-black" />,
 });
 
 // Group skills by category for rotation
@@ -31,31 +37,33 @@ const skillsByCategory = skills.reduce((acc, skill) => {
 
 // Category labels
 const categoryLabels = {
-  frontend: 'Frontend',
-  backend: 'Backend',
-  blockchain: 'Blockchain',
-  ml: 'Machine Learning',
-  tools: 'Tools & DevOps'
+  frontend: "Frontend",
+  backend: "Backend",
+  blockchain: "Blockchain",
+  ml: "Machine Learning",
+  tools: "Tools & DevOps",
 };
 
 // Flatten all skills for rotation
 const allSkills = skills.sort((a, b) => b.level - a.level);
 
 const stats = [
-  { label: 'Years of Experience', value: '2+', icon: Code2 },
-  { label: 'Projects Completed', value: '15+', icon: Rocket },
-  { label: 'Technologies Mastered', value: `${skills.length}+`, icon: Brain },
-  { label: 'Cups of Coffee', value: '∞', icon: Target },
+  { label: "Years of Experience", value: "2+", icon: Code2 },
+  { label: "Projects Completed", value: "30+", icon: Rocket },
+  { label: "Technologies Mastered", value: `${skills.length}+`, icon: Brain },
+  { label: "Cups of Coffee", value: "∞", icon: Target },
 ];
 
 function SkillRotator() {
   const [currentCategoryIndex, setCurrentCategoryIndex] = useState(0);
   const categories = Object.keys(skillsByCategory);
-  const [displayMode, setDisplayMode] = useState<'category' | 'all'>('category');
+  const [displayMode, setDisplayMode] = useState<"category" | "all">(
+    "category"
+  );
 
   useEffect(() => {
     const interval = setInterval(() => {
-      if (displayMode === 'category') {
+      if (displayMode === "category") {
         setCurrentCategoryIndex((prev) => (prev + 1) % categories.length);
       }
     }, 4000); // Change category every 4 seconds
@@ -64,9 +72,10 @@ function SkillRotator() {
   }, [categories.length, displayMode]);
 
   const currentCategory = categories[currentCategoryIndex];
-  const currentSkills = displayMode === 'category' 
-    ? skillsByCategory[currentCategory] 
-    : allSkills.slice(0, 6);
+  const currentSkills =
+    displayMode === "category"
+      ? skillsByCategory[currentCategory]
+      : allSkills.slice(0, 6);
 
   return (
     <div className="space-y-4">
@@ -74,21 +83,21 @@ function SkillRotator() {
         <h4 className="text-xl font-semibold text-white">Skills & Expertise</h4>
         <div className="flex gap-2">
           <button
-            onClick={() => setDisplayMode('category')}
+            onClick={() => setDisplayMode("category")}
             className={`px-3 py-1 rounded-full text-xs font-medium transition-all ${
-              displayMode === 'category' 
-                ? 'bg-gradient-to-r from-cyan-500 to-purple-500 text-white' 
-                : 'bg-white/10 text-gray-400 hover:bg-white/20'
+              displayMode === "category"
+                ? "bg-gradient-to-r from-cyan-500 to-purple-500 text-white"
+                : "bg-white/10 text-gray-400 hover:bg-white/20"
             }`}
           >
             By Category
           </button>
           <button
-            onClick={() => setDisplayMode('all')}
+            onClick={() => setDisplayMode("all")}
             className={`px-3 py-1 rounded-full text-xs font-medium transition-all ${
-              displayMode === 'all' 
-                ? 'bg-gradient-to-r from-cyan-500 to-purple-500 text-white' 
-                : 'bg-white/10 text-gray-400 hover:bg-white/20'
+              displayMode === "all"
+                ? "bg-gradient-to-r from-cyan-500 to-purple-500 text-white"
+                : "bg-white/10 text-gray-400 hover:bg-white/20"
             }`}
           >
             Top Skills
@@ -104,7 +113,7 @@ function SkillRotator() {
           exit={{ opacity: 0, y: -20 }}
           transition={{ duration: 0.5 }}
         >
-          {displayMode === 'category' && (
+          {displayMode === "category" && (
             <div className="mb-4 flex items-center justify-between">
               <h5 className="text-lg font-medium text-transparent bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text">
                 {categoryLabels[currentCategory as keyof typeof categoryLabels]}
@@ -115,9 +124,9 @@ function SkillRotator() {
                     key={cat}
                     onClick={() => setCurrentCategoryIndex(idx)}
                     className={`w-2 h-2 rounded-full transition-all ${
-                      idx === currentCategoryIndex 
-                        ? 'bg-gradient-to-r from-cyan-400 to-purple-400 w-8' 
-                        : 'bg-white/20'
+                      idx === currentCategoryIndex
+                        ? "bg-gradient-to-r from-cyan-400 to-purple-400 w-8"
+                        : "bg-white/20"
                     }`}
                   />
                 ))}
@@ -169,15 +178,14 @@ export default function About() {
   const [isHovered, setIsHovered] = useState(false);
   const { scrollYProgress } = useScroll({
     target: containerRef,
-    offset: ['start end', 'end start']
+    offset: ["start end", "end start"],
   });
-
 
   const opacity = useTransform(scrollYProgress, [0, 0.3, 0.7, 1], [0, 1, 1, 0]);
 
   return (
-    <section 
-      id="about" 
+    <section
+      id="about"
       ref={containerRef}
       className="relative min-h-screen bg-black overflow-hidden py-20"
       onMouseEnter={() => setIsHovered(true)}
@@ -211,7 +219,7 @@ export default function About() {
         )}
       </AnimatePresence>
 
-      <motion.div 
+      <motion.div
         style={{ opacity }}
         className="relative z-10 max-w-7xl mx-auto px-6"
       >
@@ -230,14 +238,15 @@ export default function About() {
           >
             <Sparkles className="w-8 h-8 text-purple-400" />
           </motion.div>
-          
+
           <h2 className="text-5xl md:text-6xl font-bold mb-4">
             <span className="bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent">
               About Me
             </span>
           </h2>
           <p className="text-gray-400 text-lg max-w-2xl mx-auto">
-            Passionate developer crafting digital experiences at the intersection of creativity and technology
+            Passionate developer crafting digital experiences at the
+            intersection of creativity and technology
           </p>
         </motion.div>
 
@@ -257,17 +266,30 @@ export default function About() {
               <div className="relative bg-black/50 backdrop-blur-sm border border-white/10 rounded-2xl p-8">
                 <div className="flex items-center gap-3 mb-4">
                   <GraduationCap className="w-6 h-6 text-cyan-400" />
-                  <h3 className="text-2xl font-bold text-white">Ali Abdullah</h3>
+                  <h3 className="text-2xl font-bold text-white">
+                    Ali Abdullah
+                  </h3>
                 </div>
                 <p className="text-gray-300 mb-4 leading-relaxed">
-                  Computer Science student at NUST Islamabad with a passion for building 
-                  innovative web applications. I specialize in <span className="text-cyan-400 font-semibold">Next.js</span>, 
-                  <span className="text-purple-400 font-semibold"> React</span>, and modern web technologies.
+                  Computer Science student at NUST Islamabad with a passion for
+                  building innovative web applications. I specialize in{" "}
+                  <span className="text-cyan-400 font-semibold">Next.js</span>,
+                  <span className="text-purple-400 font-semibold"> React</span>,
+                  and modern web technologies.
                 </p>
                 <p className="text-gray-300 leading-relaxed">
-                  My journey in tech started with curiosity and evolved into a deep love for creating 
-                  digital solutions that make a difference. From <span className="text-cyan-400 font-semibold">blockchain voting systems</span> to 
-                  <span className="text-purple-400 font-semibold"> AI-powered applications</span>, I enjoy pushing the boundaries of what&#39;s possible.
+                  My journey in tech started with curiosity and evolved into a
+                  deep love for creating digital solutions that make a
+                  difference. From{" "}
+                  <span className="text-cyan-400 font-semibold">
+                    blockchain voting systems
+                  </span>{" "}
+                  to
+                  <span className="text-purple-400 font-semibold">
+                    {" "}
+                    AI-powered applications
+                  </span>
+                  , I enjoy pushing the boundaries of what&#39;s possible.
                 </p>
               </div>
             </div>
@@ -291,13 +313,12 @@ export default function About() {
                 <div className="w-full h-full bg-gradient-to-br from-cyan-500/20 to-purple-500/20 flex items-center justify-center">
                   <Code2 className="w-24 h-24 text-white/50" />
                 </div>
-                {/* Replace with actual image: */}
-                {/* <Image 
-                  src="/your-photo.jpg" 
-                  alt="Ali Abdullah" 
-                  fill 
+                <Image
+                  src="/images/profile.jpg"
+                  alt="Ali Abdullah"
+                  fill
                   className="object-cover"
-                /> */}
+                />
               </div>
             </div>
 
@@ -316,7 +337,9 @@ export default function About() {
                   <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/10 to-purple-500/10 rounded-xl blur-xl group-hover:blur-2xl transition-all" />
                   <div className="relative bg-black/50 backdrop-blur-sm border border-white/10 rounded-xl p-6 text-center">
                     <stat.icon className="w-8 h-8 mx-auto mb-2 text-cyan-400" />
-                    <div className="text-2xl font-bold text-white mb-1">{stat.value}</div>
+                    <div className="text-2xl font-bold text-white mb-1">
+                      {stat.value}
+                    </div>
                     <div className="text-sm text-gray-400">{stat.label}</div>
                   </div>
                 </motion.div>
@@ -357,8 +380,9 @@ export default function About() {
           className="mt-20 text-center"
         >
           <blockquote className="text-2xl md:text-3xl font-light text-gray-300 italic">
-            &quot;The best way to predict the future is to 
-            <span className="text-cyan-400 font-semibold"> create</span> it.&quot;
+            &quot;The best way to predict the future is to
+            <span className="text-cyan-400 font-semibold"> create</span>{" "}
+            it.&quot;
           </blockquote>
           <p className="text-gray-500 mt-4">- My Development Philosophy</p>
         </motion.div>
