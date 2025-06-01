@@ -42,4 +42,16 @@ export const projects: Project[] = [
     color: '#FF5757',
     icon: '🤖',
   },
+  {
+  id: 'plant-disease-classification',
+  title: 'Plant Disease Classification',
+  description: 'AI-powered plant disease detection using deep learning',
+  longDescription: 'An intelligent plant disease classification system that uses computer vision and deep learning to identify various plant diseases from leaf images. Built with convolutional neural networks to help farmers and gardeners quickly diagnose plant health issues with high accuracy.',
+  technologies: ['Python', 'TensorFlow', 'Keras', 'OpenCV', 'NumPy', 'Matplotlib', 'Jupyter Notebooks'],
+  category: 'ml',
+  githubUrl: 'https://github.com/ali-abdullah9/plant-disease-classification',
+  featured: true,
+  color: '#4CAF50',
+  icon: '🌱',
+}
 ];
