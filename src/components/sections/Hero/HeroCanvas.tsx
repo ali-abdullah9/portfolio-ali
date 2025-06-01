@@ -138,11 +138,17 @@ export default function HeroCanvas() {
       <pointLight position={[10, 10, 10]} intensity={0.5} color="#00d9ff" />
       <pointLight position={[-10, -10, -10]} intensity={0.3} color="#8b5cf6" />
       
-      {/* Glass orbs with glow */}
-      <GlassOrb position={[4, 1, -3]} scale={1.2} speed={0.6} color="#00d9ff" />
-      <GlassOrb position={[-3, -1, -2]} scale={0.8} speed={0.8} color="#8b5cf6" />
-      <GlassOrb position={[2, -2, -4]} scale={0.6} speed={1} color="#00d9ff" />
+      {/* Glass orbs with glow - Left side */}
       <GlassOrb position={[-4, 2, -3]} scale={0.9} speed={0.7} color="#06b6d4" />
+      <GlassOrb position={[-3, -1, -2]} scale={0.8} speed={0.8} color="#8b5cf6" />
+      
+      {/* Glass orbs with glow - Center */}
+      <GlassOrb position={[2, -2, -4]} scale={0.6} speed={1} color="#00d9ff" />
+      
+      {/* Glass orbs with glow - Right side (new additions) */}
+      <GlassOrb position={[4, 1, -3]} scale={1.2} speed={0.6} color="#00d9ff" />
+      <GlassOrb position={[5, -0.5, -2.5]} scale={0.7} speed={0.9} color="#a855f7" />
+      <GlassOrb position={[3.5, 2.5, -4]} scale={0.5} speed={1.1} color="#06b6d4" />
       
       {/* Animated particles */}
       <AnimatedParticles />
