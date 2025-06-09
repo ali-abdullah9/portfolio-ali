@@ -3,20 +3,24 @@ import type { Metadata } from 'next';
 import { Inter, Space_Grotesk, JetBrains_Mono } from 'next/font/google';
 import '@/app/globals.css';
 import { siteConfig } from '../../../config/site';
+import GlobalBackground from '@/components/three/GlobalBackground';
 
 const inter = Inter({ 
   subsets: ['latin'],
   variable: '--font-inter',
+  display: 'swap', // Optimize font loading
 });
 
 const spaceGrotesk = Space_Grotesk({ 
   subsets: ['latin'],
   variable: '--font-space-grotesk',
+  display: 'swap',
 });
 
 const jetbrainsMono = JetBrains_Mono({ 
   subsets: ['latin'],
   variable: '--font-jetbrains',
+  display: 'swap',
 });
 
 export const metadata: Metadata = {
@@ -52,7 +56,13 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable} ${spaceGrotesk.variable} ${jetbrainsMono.variable}`}>
       <body className="min-h-screen bg-black text-white antialiased">
-        <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-gray-900 via-black to-black opacity-80" />
+        {/* Single global 3D background */}
+        <GlobalBackground />
+        
+        {/* Static gradient overlay */}
+        <div className="fixed inset-0 -z-10 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-gray-900 via-black to-black opacity-80 pointer-events-none" />
+        
+        {/* Main content */}
         <div className="relative z-10">
           {children}
         </div>
@@ -60,4 +70,3 @@ export default function RootLayout({
     </html>
   );
 }
-

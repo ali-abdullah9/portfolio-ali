@@ -1,7 +1,7 @@
 // src/components/sections/Projects/index.tsx
 'use client';
 
-import { useRef, useState, Suspense } from 'react';
+import { useRef, useState } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { 
   ExternalLink, 
@@ -15,13 +15,10 @@ import {
 
 import { projects } from '@/data/projects';
 import dynamic from 'next/dynamic';
+import SectionWrapper from '@/components/Shared/SectionWrapper';
 
 // Dynamically import components
 const ReactPlayer = dynamic(() => import('react-player/lazy'), { ssr: false });
-const ProjectsCanvas = dynamic(() => import('./ProjectsCanvas'), {
-  ssr: false,
-  loading: () => <div className="absolute inset-0 bg-black" />
-});
 
 const ProjectCard = ({ project, index }: { project: typeof projects[0], index: number }) => {
   const [isPlaying, setIsPlaying] = useState(false);
@@ -179,23 +176,7 @@ export default function Projects() {
   const categories = ['all', ...Array.from(new Set(projects.map(p => p.category)))];
 
   return (
-    <section 
-      id="projects" 
-      ref={containerRef}
-      className="relative min-h-screen bg-black overflow-hidden py-20"
-    >
-      {/* 3D Background - Same as Hero/About */}
-      <div className="absolute inset-0">
-        <Suspense fallback={<div className="h-full w-full bg-black" />}>
-          <ProjectsCanvas />
-        </Suspense>
-      </div>
-
-      {/* Animated gradient background */}
-      <div className="absolute inset-0 opacity-50">
-        <div className="absolute top-1/3 right-1/4 w-[600px] h-[600px] rounded-full bg-gradient-to-br from-purple-500/20 via-transparent to-transparent blur-3xl animate-pulse" />
-        <div className="absolute bottom-1/3 left-1/4 w-[600px] h-[600px] rounded-full bg-gradient-to-tl from-cyan-500/20 via-transparent to-transparent blur-3xl animate-pulse animation-delay-2000" />
-      </div>
+    <SectionWrapper id="projects" gradient="purple">
 
       <motion.div 
         style={{ opacity }}
@@ -329,6 +310,6 @@ export default function Projects() {
           </motion.a>
         </motion.div>
       </motion.div>
-    </section>
+    </SectionWrapper>
   );
 }

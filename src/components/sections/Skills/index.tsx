@@ -1,7 +1,7 @@
 // src/components/sections/Skills/index.tsx
 'use client';
 
-import { useRef, useState, Suspense } from 'react';
+import { useRef, useState} from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { 
   Code2, 
@@ -13,13 +13,7 @@ import {
   ChevronRight
 } from 'lucide-react';
 import { skills } from '@/data/skills';
-import dynamic from 'next/dynamic';
 
-// Dynamically import the canvas
-const SkillsCanvas = dynamic(() => import('./SkillsCanvas'), {
-  ssr: false,
-  loading: () => <div className="absolute inset-0 bg-black" />
-});
 
 // Category icons
 const categoryIcons = {
@@ -204,17 +198,10 @@ export default function Skills() {
     <section 
       id="skills" 
       ref={containerRef}
-      className="relative min-h-screen bg-black overflow-hidden py-20"
+      className="relative min-h-screen overflow-hidden py-20" // Removed bg-black
     >
-      {/* 3D Background */}
-      <div className="absolute inset-0">
-        <Suspense fallback={<div className="h-full w-full bg-black" />}>
-          <SkillsCanvas />
-        </Suspense>
-      </div>
-
-      {/* Animated gradient background */}
-      <div className="absolute inset-0 opacity-50">
+      {/* Animated gradient background - reduced opacity */}
+      <div className="absolute inset-0 opacity-30"> {/* Reduced from opacity-50 */}
         <div className="absolute -top-1/2 -right-1/2 h-full w-full rounded-full bg-gradient-to-bl from-cyan-500/20 via-transparent to-transparent blur-3xl animate-pulse" />
         <div className="absolute -bottom-1/2 -left-1/2 h-full w-full rounded-full bg-gradient-to-tr from-purple-500/20 via-transparent to-transparent blur-3xl animate-pulse animation-delay-2000" />
       </div>

@@ -1,7 +1,7 @@
 // src/components/sections/About/index.tsx
 "use client";
 
-import { useRef, useState, useEffect, Suspense } from "react";
+import { useRef, useState, useEffect } from "react";
 import {
   motion,
   useScroll,
@@ -17,14 +17,7 @@ import {
   Sparkles,
 } from "lucide-react";
 import { skills } from "@/data/skills";
-import dynamic from "next/dynamic";
 import Image from "next/image";
-
-// Dynamically import the canvas component
-const AboutCanvas = dynamic(() => import("./AboutCanvas"), {
-  ssr: false,
-  loading: () => <div className="absolute inset-0 bg-black" />,
-});
 
 // Group skills by category for rotation
 const skillsByCategory = skills.reduce((acc, skill) => {
@@ -54,19 +47,18 @@ const stats = [
   { label: "Cups of Coffee", value: "∞", icon: Target },
 ];
 
-function SkillRotator() {
+// Memoized skill rotator component
+const SkillRotator = React.memo(function SkillRotator() {
   const [currentCategoryIndex, setCurrentCategoryIndex] = useState(0);
   const categories = Object.keys(skillsByCategory);
-  const [displayMode, setDisplayMode] = useState<"category" | "all">(
-    "category"
-  );
+  const [displayMode, setDisplayMode] = useState<"category" | "all">("category");
 
   useEffect(() => {
     const interval = setInterval(() => {
       if (displayMode === "category") {
         setCurrentCategoryIndex((prev) => (prev + 1) % categories.length);
       }
-    }, 4000); // Change category every 4 seconds
+    }, 4000);
 
     return () => clearInterval(interval);
   }, [categories.length, displayMode]);
@@ -140,7 +132,7 @@ function SkillRotator() {
                 key={`${skill.name}-${currentCategory}`}
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: index * 0.1 }}
+                transition={{ delay: index * 0.05 }} // Reduced delay
                 className="relative group"
               >
                 <div className="flex justify-between mb-2">
@@ -158,11 +150,9 @@ function SkillRotator() {
                   <motion.div
                     initial={{ width: 0 }}
                     animate={{ width: `${skill.level}%` }}
-                    transition={{ duration: 1, delay: 0.2 + index * 0.1 }}
-                    className="h-full bg-gradient-to-r from-cyan-400 to-purple-400 rounded-full relative"
-                  >
-                    <div className="absolute inset-0 bg-white/20 animate-pulse" />
-                  </motion.div>
+                    transition={{ duration: 0.8, delay: index * 0.05 }}
+                    className="h-full bg-gradient-to-r from-cyan-400 to-purple-400 rounded-full"
+                  />
                 </div>
               </motion.div>
             ))}
@@ -171,11 +161,10 @@ function SkillRotator() {
       </AnimatePresence>
     </div>
   );
-}
+});
 
 export default function About() {
   const containerRef = useRef<HTMLElement>(null);
-  const [isHovered, setIsHovered] = useState(false);
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start end", "end start"],
@@ -187,37 +176,13 @@ export default function About() {
     <section
       id="about"
       ref={containerRef}
-      className="relative min-h-screen bg-black overflow-hidden py-20"
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
+      className="relative min-h-screen py-20"
     >
-      {/* 3D Background - Same as Hero */}
-      <div className="absolute inset-0">
-        <Suspense fallback={<div className="h-full w-full bg-black" />}>
-          <AboutCanvas />
-        </Suspense>
+      {/* Simple animated gradient background */}
+      <div className="absolute inset-0 opacity-30">
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full bg-gradient-to-br from-cyan-500/20 via-transparent to-transparent blur-3xl" />
+        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 rounded-full bg-gradient-to-tl from-purple-500/20 via-transparent to-transparent blur-3xl" />
       </div>
-
-      {/* Animated gradient background */}
-      <div className="absolute inset-0 opacity-50">
-        <div className="absolute -top-1/2 -left-1/2 h-full w-full rounded-full bg-gradient-to-br from-cyan-500/20 via-transparent to-transparent blur-3xl animate-pulse" />
-        <div className="absolute -bottom-1/2 -right-1/2 h-full w-full rounded-full bg-gradient-to-tl from-purple-500/20 via-transparent to-transparent blur-3xl animate-pulse animation-delay-2000" />
-      </div>
-
-      {/* Hover Glow Effect */}
-      <AnimatePresence>
-        {isHovered && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.5 }}
-            className="absolute inset-0 pointer-events-none"
-          >
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-gradient-to-r from-cyan-500/20 to-purple-500/20 rounded-full blur-3xl" />
-          </motion.div>
-        )}
-      </AnimatePresence>
 
       <motion.div
         style={{ opacity }}
@@ -227,8 +192,8 @@ export default function About() {
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
           <motion.div
@@ -256,13 +221,13 @@ export default function About() {
           <motion.div
             initial={{ opacity: 0, x: -50 }}
             whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, delay: 0.2 }}
+            viewport={{ once: true, margin: "-50px" }}
+            transition={{ duration: 0.6 }}
             className="space-y-6"
           >
             {/* Bio Card */}
             <div className="relative group">
-              <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/20 to-purple-500/20 rounded-2xl blur-xl group-hover:blur-2xl transition-all duration-300" />
+              <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/10 to-purple-500/10 rounded-2xl blur-xl group-hover:blur-2xl transition-all duration-300" />
               <div className="relative bg-black/50 backdrop-blur-sm border border-white/10 rounded-2xl p-8">
                 <div className="flex items-center gap-3 mb-4">
                   <GraduationCap className="w-6 h-6 text-cyan-400" />
@@ -302,22 +267,21 @@ export default function About() {
           <motion.div
             initial={{ opacity: 0, x: 50 }}
             whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, delay: 0.4 }}
+            viewport={{ once: true, margin: "-50px" }}
+            transition={{ duration: 0.6 }}
             className="space-y-8"
           >
-            {/* Profile Image Placeholder */}
+            {/* Profile Image */}
             <div className="relative group mx-auto w-64 h-64">
-              <div className="absolute inset-0 bg-gradient-to-r from-cyan-500 to-purple-500 rounded-full blur-2xl opacity-50 group-hover:opacity-70 transition-opacity" />
+              <div className="absolute inset-0 bg-gradient-to-r from-cyan-500 to-purple-500 rounded-full blur-2xl opacity-30 group-hover:opacity-50 transition-opacity" />
               <div className="relative w-full h-full rounded-full overflow-hidden border-4 border-white/10">
-                <div className="w-full h-full bg-gradient-to-br from-cyan-500/20 to-purple-500/20 flex items-center justify-center">
-                  <Code2 className="w-24 h-24 text-white/50" />
-                </div>
                 <Image
                   src="/images/profile.jpg"
                   alt="Ali Abdullah"
                   fill
                   className="object-cover"
+                  loading="lazy"
+                  sizes="(max-width: 768px) 100vw, 256px"
                 />
               </div>
             </div>
@@ -330,11 +294,11 @@ export default function About() {
                   initial={{ opacity: 0, scale: 0.8 }}
                   whileInView={{ opacity: 1, scale: 1 }}
                   viewport={{ once: true }}
-                  transition={{ delay: 0.6 + index * 0.1 }}
+                  transition={{ delay: index * 0.1 }}
                   whileHover={{ scale: 1.05 }}
                   className="relative group"
                 >
-                  <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/10 to-purple-500/10 rounded-xl blur-xl group-hover:blur-2xl transition-all" />
+                  <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/10 to-purple-500/10 rounded-xl blur-xl opacity-0 group-hover:opacity-100 transition-all" />
                   <div className="relative bg-black/50 backdrop-blur-sm border border-white/10 rounded-xl p-6 text-center">
                     <stat.icon className="w-8 h-8 mx-auto mb-2 text-cyan-400" />
                     <div className="text-2xl font-bold text-white mb-1">
@@ -351,7 +315,7 @@ export default function About() {
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: 0.8 }}
+              transition={{ delay: 0.4 }}
               className="text-center"
             >
               <a
@@ -376,7 +340,7 @@ export default function About() {
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ delay: 1 }}
+          transition={{ delay: 0.5 }}
           className="mt-20 text-center"
         >
           <blockquote className="text-2xl md:text-3xl font-light text-gray-300 italic">
@@ -390,3 +354,5 @@ export default function About() {
     </section>
   );
 }
+
+import React from "react";
